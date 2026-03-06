@@ -416,8 +416,8 @@ fig7 <- ggplot(sensitivity_df, aes(x = cohort, y = macro_f1, fill = analysis)) +
   geom_errorbar(aes(ymin = f1_lo, ymax = f1_hi),
                 position = position_dodge(width = 0.7), width = 0.2, linewidth = 0.4) +
   geom_text(aes(label = sprintf("%.3f", macro_f1)),
-            position = position_dodge(width = 0.7), vjust = -0.8, size = 3.5) +
-  scale_y_continuous(limits = c(0, 0.9), expand = expansion(mult = c(0, 0.05))) +
+            position = position_dodge(width = 0.7), vjust = -1.2, size = 3.5) +
+  scale_y_continuous(limits = c(0, 0.95), expand = expansion(mult = c(0, 0.05))) +
   scale_fill_manual(values = c("4-class" = "#E7298A", "3-class (luminal grouped)" = "#66A61E")) +
   labs(
     x = NULL,
@@ -441,11 +441,11 @@ fig8 <- ggplot(metabric_perf, aes(x = model, y = macro_f1, fill = feature_set)) 
   geom_errorbar(aes(ymin = f1_lo, ymax = f1_hi),
                 position = position_dodge(width = 0.75), width = 0.2, linewidth = 0.4) +
   geom_text(aes(label = sprintf("%.3f", macro_f1)),
-            position = position_dodge(width = 0.75), vjust = -0.8, size = 3.2) +
+            position = position_dodge(width = 0.75), vjust = -1.2, size = 3.2) +
   geom_hline(yintercept = 0.646, linetype = "dashed", color = "#D73027", linewidth = 0.6) +
-  annotate("text", x = 0.6, y = 0.655, label = "IHC surrogate (0.646)", color = "#D73027",
-           size = 3, hjust = 0, fontface = "italic") +
-  scale_y_continuous(limits = c(0, 0.72), expand = expansion(mult = c(0, 0.05))) +
+  annotate("text", x = 3.3, y = 0.665, label = "IHC surrogate (0.646)", color = "#D73027",
+           size = 3, hjust = 1, fontface = "italic") +
+  scale_y_continuous(limits = c(0, 0.75), expand = expansion(mult = c(0, 0.05))) +
   scale_fill_manual(values = c("Set 1" = "#ABD9E9", "Set 2" = "#4575B4")) +
   labs(
     x = NULL,
