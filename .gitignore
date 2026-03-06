@@ -27,7 +27,12 @@ desktop.ini
 
 # Intermediate manuscript renders
 manuscript/*.pdf
+manuscript/*.html
 manuscript/*_p*.png
+manuscript/page_*.png
+
+# Download logs
+data/download_log.txt
 
 # Original planning doc
 Kit mestre do estudo in silico.docx

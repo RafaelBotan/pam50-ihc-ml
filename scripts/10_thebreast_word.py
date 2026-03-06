@@ -14,7 +14,7 @@ Revision notes (v2):
   - Correction #5:  Section 3.3 rewritten (TCGA as limited validation)
   - Correction #6:  Ethics statement added
   - Correction #7:  Table 4 retitled + explanatory note
-  - Correction #8:  Data availability → choice B (upon acceptance)
+  - Correction #8:  Data availability → public GitHub repository
   - Correction #9:  Figure 6 (information ceiling) moved to supplementary
   - Correction #10: Conclusions tightened
   - Correction #11: AI declaration made more sober
@@ -687,8 +687,8 @@ def build_manuscript(inline=True):
     para(doc,
         'All data used in this study are publicly available. GSE81538 and GSE96058 are '
         'available through NCBI GEO; TCGA-BRCA and METABRIC clinical data were accessed '
-        'through cBioPortal. Analysis code and reproducibility materials will be made '
-        'publicly available upon acceptance.', indent=False)
+        'through cBioPortal. Complete analysis code and reproducibility materials are '
+        'publicly available at: https://github.com/RafaelBotan/pam50-ihc-ml', indent=False)
 
     # References
     h1(doc, 'References')
@@ -819,7 +819,7 @@ if __name__ == '__main__':
     print(f"  #5  Section 3.3 rewritten (TCGA as limited validation)")
     print(f"  #6  Ethics statement added")
     print(f"  #7  Table 4 retitled + footnote")
-    print(f"  #8  Data availability → upon acceptance")
+    print(f"  #8  Data availability → GitHub public repository")
     print(f"  #9  Figure 6 moved to Supplementary Fig. S5")
     print(f"  #10 Conclusions tightened")
     print(f"  #11 AI declaration made sober")
