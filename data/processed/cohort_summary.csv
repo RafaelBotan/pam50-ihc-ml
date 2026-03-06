@@ -1,0 +1,5 @@
+cohort,n,pam50_available,er_available,pr_available,her2_available,ki67_available,grade_available
+GSE81538,405,405,405,405,402,405,405
+GSE96058,3069,3069,2870,2739,2964,0,0
+METABRIC,2509,1974,2469,1980,1980,0,2388
+TCGA-BRCA,1108,0,1053,1050,890,0,0

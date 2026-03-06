@@ -1,0 +1,33 @@
+# Raw data (downloaded by 01_download_data.py)
+data/raw/
+
+# Large binary figures (PNGs kept, TIFFs too large for git)
+figures_R/*.tiff
+figures/*.tiff
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Intermediate manuscript renders
+manuscript/*.pdf
+manuscript/*_p*.png
+
+# Original planning doc
+Kit mestre do estudo in silico.docx

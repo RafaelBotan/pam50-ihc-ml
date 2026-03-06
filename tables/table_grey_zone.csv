@@ -1,0 +1,4 @@
+Confidence Zone,N,N (%),ML Accuracy,Surrogate Accuracy,Luminal A+B proportion
+Low (<0.50),208,208 (13.5%),0.159,0.548,73.6%
+Medium (0.50-0.70),438,438 (28.4%),0.493,0.493,88.8%
+High (>0.70),898,898 (58.2%),0.731,0.738,64.9%

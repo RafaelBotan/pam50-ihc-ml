@@ -1,0 +1,31 @@
+feature_set,model,validation_cohort,n,accuracy,balanced_accuracy,macro_f1,kappa
+Set 1 (Core IHQ),Logistic Regression,Internal CV,2848,0.649,0.6,0.516,0.373
+Set 1 (Core IHQ),Random Forest,Internal CV,2848,0.649,0.6,0.516,0.373
+Set 1 (Core IHQ),XGBoost,Internal CV,2848,0.654,0.561,0.546,0.353
+Set 1 (Core IHQ),Logistic Regression,TCGA-BRCA,435,0.589,0.606,0.492,0.41
+Set 1 (Core IHQ),Random Forest,TCGA-BRCA,435,0.589,0.606,0.492,0.41
+Set 1 (Core IHQ),XGBoost,TCGA-BRCA,435,0.598,0.6,0.514,0.405
+Set 1 (Core IHQ),Logistic Regression,METABRIC,1608,0.517,0.54,0.432,0.317
+Set 1 (Core IHQ),Random Forest,METABRIC,1608,0.517,0.54,0.432,0.317
+Set 1 (Core IHQ),XGBoost,METABRIC,1608,0.6,0.576,0.522,0.376
+Set 1 (Core IHQ),IHQ Surrogate,TCGA-BRCA,162,0.63,0.571,0.487,0.49
+Set 1 (Core IHQ),IHQ Surrogate,METABRIC,1554,0.643,0.62,0.646,0.47
+Set 1 (Core IHQ),IHQ Surrogate,GSE81538,381,0.701,0.68,0.675,0.574
+Set 1 (Core IHQ),IHQ Surrogate,GSE96058,2597,0.661,0.527,0.553,0.43
+Set 2 (IHQ + Grade),Logistic Regression,Internal CV,2810,0.722,0.691,0.664,0.542
+Set 2 (IHQ + Grade),Random Forest,Internal CV,2810,0.724,0.687,0.673,0.544
+Set 2 (IHQ + Grade),XGBoost,Internal CV,2810,0.731,0.653,0.669,0.54
+Set 2 (IHQ + Grade),Logistic Regression,METABRIC,1544,0.536,0.574,0.52,0.363
+Set 2 (IHQ + Grade),Random Forest,METABRIC,1544,0.565,0.593,0.56,0.389
+Set 2 (IHQ + Grade),XGBoost,METABRIC,1544,0.586,0.586,0.56,0.403
+Set 2 (IHQ + Grade),IHQ Surrogate,TCGA-BRCA,162,0.63,0.571,0.487,0.49
+Set 2 (IHQ + Grade),IHQ Surrogate,METABRIC,1554,0.643,0.62,0.646,0.47
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE81538,381,0.701,0.68,0.675,0.574
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE96058,2597,0.661,0.527,0.553,0.43
+Set 3 (IHQ + Ki67 + Grade),Logistic Regression,Internal CV,1519,0.68,0.712,0.683,0.526
+Set 3 (IHQ + Ki67 + Grade),Random Forest,Internal CV,1519,0.679,0.692,0.678,0.517
+Set 3 (IHQ + Ki67 + Grade),XGBoost,Internal CV,1519,0.723,0.67,0.687,0.552
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,TCGA-BRCA,162,0.63,0.571,0.487,0.49
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,METABRIC,1554,0.643,0.62,0.646,0.47
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE81538,381,0.701,0.68,0.675,0.574
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE96058,2597,0.661,0.527,0.553,0.43

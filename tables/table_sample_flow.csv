@@ -1,0 +1,5 @@
+Cohort,N (4-class PAM50),N (Set 1 complete),N (Set 2 complete),N (Surrogate classifiable),N (Head-to-head Set 1 vs Surrogate)
+GSE81538,383,381,381,381,381
+GSE96058,2867,2467,2429,2597,2464
+TCGA-BRCA,519,435,0,162,162
+METABRIC,1608,1608,1544,1554,1554

@@ -1,0 +1,5 @@
+Cohort,True LumA (N),LumA misclassified as LumB,True LumB (N),LumB misclassified as LumA
+GSE81538,155,42 (27.1%),105,17 (16.2%)
+GSE96058,1469,369 (25.1%),676,196 (29.0%)
+TCGA-BRCA,28,26 (92.9%),25,0 (0.0%)
+METABRIC,669,180 (26.9%),457,194 (42.5%)

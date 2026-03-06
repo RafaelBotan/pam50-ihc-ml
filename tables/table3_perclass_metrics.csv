@@ -1,0 +1,121 @@
+Feature Set,Model,Cohort,PAM50 Subtype,Precision,Recall,F1,Support
+Set 1 (Core IHQ),Logistic Regression,Internal CV,Basal,0.618,0.78,0.69,255.0
+Set 1 (Core IHQ),Logistic Regression,Internal CV,Her2,0.521,0.696,0.596,283.0
+Set 1 (Core IHQ),Logistic Regression,Internal CV,LumA,0.676,0.922,0.78,1573.0
+Set 1 (Core IHQ),Logistic Regression,Internal CV,LumB,0.0,0.0,0.0,737.0
+Set 1 (Core IHQ),Random Forest,Internal CV,Basal,0.618,0.78,0.69,255.0
+Set 1 (Core IHQ),Random Forest,Internal CV,Her2,0.521,0.696,0.596,283.0
+Set 1 (Core IHQ),Random Forest,Internal CV,LumA,0.676,0.922,0.78,1573.0
+Set 1 (Core IHQ),Random Forest,Internal CV,LumB,0.0,0.0,0.0,737.0
+Set 1 (Core IHQ),XGBoost,Internal CV,Basal,0.87,0.682,0.765,255.0
+Set 1 (Core IHQ),XGBoost,Internal CV,Her2,0.565,0.569,0.567,283.0
+Set 1 (Core IHQ),XGBoost,Internal CV,LumA,0.659,0.951,0.779,1573.0
+Set 1 (Core IHQ),XGBoost,Internal CV,LumB,0.333,0.042,0.075,737.0
+Set 1 (Core IHQ),Logistic Regression,TCGA-BRCA,Basal,0.636,0.861,0.731,79.0
+Set 1 (Core IHQ),Logistic Regression,TCGA-BRCA,Her2,0.402,0.78,0.531,50.0
+Set 1 (Core IHQ),Logistic Regression,TCGA-BRCA,LumA,0.645,0.784,0.708,190.0
+Set 1 (Core IHQ),Logistic Regression,TCGA-BRCA,LumB,0.0,0.0,0.0,116.0
+Set 1 (Core IHQ),Random Forest,TCGA-BRCA,Basal,0.636,0.861,0.731,79.0
+Set 1 (Core IHQ),Random Forest,TCGA-BRCA,Her2,0.402,0.78,0.531,50.0
+Set 1 (Core IHQ),Random Forest,TCGA-BRCA,LumA,0.645,0.784,0.708,190.0
+Set 1 (Core IHQ),Random Forest,TCGA-BRCA,LumB,0.0,0.0,0.0,116.0
+Set 1 (Core IHQ),XGBoost,TCGA-BRCA,Basal,0.886,0.785,0.832,79.0
+Set 1 (Core IHQ),XGBoost,TCGA-BRCA,Her2,0.402,0.78,0.531,50.0
+Set 1 (Core IHQ),XGBoost,TCGA-BRCA,LumA,0.593,0.837,0.694,190.0
+Set 1 (Core IHQ),XGBoost,TCGA-BRCA,LumB,0.0,0.0,0.0,116.0
+Set 1 (Core IHQ),Logistic Regression,METABRIC,Basal,0.323,0.833,0.465,209.0
+Set 1 (Core IHQ),Logistic Regression,METABRIC,Her2,0.593,0.571,0.582,224.0
+Set 1 (Core IHQ),Logistic Regression,METABRIC,LumA,0.621,0.757,0.683,700.0
+Set 1 (Core IHQ),Logistic Regression,METABRIC,LumB,0.0,0.0,0.0,475.0
+Set 1 (Core IHQ),Random Forest,METABRIC,Basal,0.323,0.833,0.465,209.0
+Set 1 (Core IHQ),Random Forest,METABRIC,Her2,0.593,0.571,0.582,224.0
+Set 1 (Core IHQ),Random Forest,METABRIC,LumA,0.621,0.757,0.683,700.0
+Set 1 (Core IHQ),Random Forest,METABRIC,LumB,0.0,0.0,0.0,475.0
+Set 1 (Core IHQ),XGBoost,METABRIC,Basal,0.821,0.766,0.792,209.0
+Set 1 (Core IHQ),XGBoost,METABRIC,Her2,0.593,0.571,0.582,224.0
+Set 1 (Core IHQ),XGBoost,METABRIC,LumA,0.565,0.966,0.713,700.0
+Set 1 (Core IHQ),XGBoost,METABRIC,LumB,0.0,0.0,0.0,475.0
+Set 1 (Core IHQ),IHQ Surrogate,TCGA-BRCA,Basal,0.923,0.896,0.909,67.0
+Set 1 (Core IHQ),IHQ Surrogate,TCGA-BRCA,Her2,0.783,0.429,0.554,42.0
+Set 1 (Core IHQ),IHQ Surrogate,TCGA-BRCA,LumA,0.0,0.0,0.0,28.0
+Set 1 (Core IHQ),IHQ Surrogate,TCGA-BRCA,LumB,0.324,0.96,0.485,25.0
+Set 1 (Core IHQ),IHQ Surrogate,METABRIC,Basal,0.826,0.751,0.787,209.0
+Set 1 (Core IHQ),IHQ Surrogate,METABRIC,Her2,0.832,0.429,0.566,219.0
+Set 1 (Core IHQ),IHQ Surrogate,METABRIC,LumA,0.683,0.725,0.703,669.0
+Set 1 (Core IHQ),IHQ Surrogate,METABRIC,LumB,0.486,0.575,0.527,457.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE81538,Basal,0.929,0.929,0.929,56.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE81538,Her2,0.882,0.231,0.366,65.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE81538,LumA,0.855,0.723,0.783,155.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE81538,LumB,0.497,0.838,0.624,105.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE96058,Basal,0.852,0.498,0.628,209.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE96058,Her2,0.776,0.156,0.26,243.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE96058,LumA,0.826,0.745,0.783,1469.0
+Set 1 (Core IHQ),IHQ Surrogate,GSE96058,LumB,0.436,0.71,0.54,676.0
+Set 2 (IHQ + Grade),Logistic Regression,Internal CV,Basal,0.666,0.777,0.717,251.0
+Set 2 (IHQ + Grade),Logistic Regression,Internal CV,Her2,0.519,0.695,0.594,272.0
+Set 2 (IHQ + Grade),Logistic Regression,Internal CV,LumA,0.809,0.848,0.828,1560.0
+Set 2 (IHQ + Grade),Logistic Regression,Internal CV,LumB,0.623,0.443,0.518,727.0
+Set 2 (IHQ + Grade),Random Forest,Internal CV,Basal,0.765,0.741,0.753,251.0
+Set 2 (IHQ + Grade),Random Forest,Internal CV,Her2,0.511,0.699,0.59,272.0
+Set 2 (IHQ + Grade),Random Forest,Internal CV,LumA,0.808,0.848,0.827,1560.0
+Set 2 (IHQ + Grade),Random Forest,Internal CV,LumB,0.603,0.462,0.523,727.0
+Set 2 (IHQ + Grade),XGBoost,Internal CV,Basal,0.796,0.713,0.752,251.0
+Set 2 (IHQ + Grade),XGBoost,Internal CV,Her2,0.589,0.533,0.56,272.0
+Set 2 (IHQ + Grade),XGBoost,Internal CV,LumA,0.79,0.887,0.836,1560.0
+Set 2 (IHQ + Grade),XGBoost,Internal CV,LumB,0.589,0.477,0.527,727.0
+Set 2 (IHQ + Grade),Logistic Regression,METABRIC,Basal,0.343,0.84,0.487,206.0
+Set 2 (IHQ + Grade),Logistic Regression,METABRIC,Her2,0.587,0.568,0.578,213.0
+Set 2 (IHQ + Grade),Logistic Regression,METABRIC,LumA,0.718,0.603,0.656,668.0
+Set 2 (IHQ + Grade),Logistic Regression,METABRIC,LumB,0.48,0.287,0.359,457.0
+Set 2 (IHQ + Grade),Random Forest,METABRIC,Basal,0.473,0.772,0.587,206.0
+Set 2 (IHQ + Grade),Random Forest,METABRIC,Her2,0.564,0.596,0.58,213.0
+Set 2 (IHQ + Grade),Random Forest,METABRIC,LumA,0.718,0.603,0.656,668.0
+Set 2 (IHQ + Grade),Random Forest,METABRIC,LumB,0.434,0.4,0.416,457.0
+Set 2 (IHQ + Grade),XGBoost,METABRIC,Basal,0.472,0.767,0.584,206.0
+Set 2 (IHQ + Grade),XGBoost,METABRIC,Her2,0.615,0.526,0.567,213.0
+Set 2 (IHQ + Grade),XGBoost,METABRIC,LumA,0.671,0.731,0.7,668.0
+Set 2 (IHQ + Grade),XGBoost,METABRIC,LumB,0.49,0.322,0.388,457.0
+Set 2 (IHQ + Grade),IHQ Surrogate,TCGA-BRCA,Basal,0.923,0.896,0.909,67.0
+Set 2 (IHQ + Grade),IHQ Surrogate,TCGA-BRCA,Her2,0.783,0.429,0.554,42.0
+Set 2 (IHQ + Grade),IHQ Surrogate,TCGA-BRCA,LumA,0.0,0.0,0.0,28.0
+Set 2 (IHQ + Grade),IHQ Surrogate,TCGA-BRCA,LumB,0.324,0.96,0.485,25.0
+Set 2 (IHQ + Grade),IHQ Surrogate,METABRIC,Basal,0.826,0.751,0.787,209.0
+Set 2 (IHQ + Grade),IHQ Surrogate,METABRIC,Her2,0.832,0.429,0.566,219.0
+Set 2 (IHQ + Grade),IHQ Surrogate,METABRIC,LumA,0.683,0.725,0.703,669.0
+Set 2 (IHQ + Grade),IHQ Surrogate,METABRIC,LumB,0.486,0.575,0.527,457.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE81538,Basal,0.929,0.929,0.929,56.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE81538,Her2,0.882,0.231,0.366,65.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE81538,LumA,0.855,0.723,0.783,155.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE81538,LumB,0.497,0.838,0.624,105.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE96058,Basal,0.852,0.498,0.628,209.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE96058,Her2,0.776,0.156,0.26,243.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE96058,LumA,0.826,0.745,0.783,1469.0
+Set 2 (IHQ + Grade),IHQ Surrogate,GSE96058,LumB,0.436,0.71,0.54,676.0
+Set 3 (IHQ + Ki67 + Grade),Logistic Regression,Internal CV,Basal,0.801,0.81,0.806,174.0
+Set 3 (IHQ + Ki67 + Grade),Logistic Regression,Internal CV,Her2,0.55,0.736,0.63,163.0
+Set 3 (IHQ + Ki67 + Grade),Logistic Regression,Internal CV,LumA,0.857,0.658,0.744,792.0
+Set 3 (IHQ + Ki67 + Grade),Logistic Regression,Internal CV,LumB,0.485,0.644,0.553,390.0
+Set 3 (IHQ + Ki67 + Grade),Random Forest,Internal CV,Basal,0.811,0.764,0.787,174.0
+Set 3 (IHQ + Ki67 + Grade),Random Forest,Internal CV,Her2,0.579,0.693,0.631,163.0
+Set 3 (IHQ + Ki67 + Grade),Random Forest,Internal CV,LumA,0.839,0.683,0.753,792.0
+Set 3 (IHQ + Ki67 + Grade),Random Forest,Internal CV,LumB,0.474,0.626,0.539,390.0
+Set 3 (IHQ + Ki67 + Grade),XGBoost,Internal CV,Basal,0.868,0.718,0.786,174.0
+Set 3 (IHQ + Ki67 + Grade),XGBoost,Internal CV,Her2,0.645,0.613,0.629,163.0
+Set 3 (IHQ + Ki67 + Grade),XGBoost,Internal CV,LumA,0.781,0.865,0.821,792.0
+Set 3 (IHQ + Ki67 + Grade),XGBoost,Internal CV,LumB,0.548,0.482,0.513,390.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,TCGA-BRCA,Basal,0.923,0.896,0.909,67.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,TCGA-BRCA,Her2,0.783,0.429,0.554,42.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,TCGA-BRCA,LumA,0.0,0.0,0.0,28.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,TCGA-BRCA,LumB,0.324,0.96,0.485,25.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,METABRIC,Basal,0.826,0.751,0.787,209.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,METABRIC,Her2,0.832,0.429,0.566,219.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,METABRIC,LumA,0.683,0.725,0.703,669.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,METABRIC,LumB,0.486,0.575,0.527,457.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE81538,Basal,0.929,0.929,0.929,56.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE81538,Her2,0.882,0.231,0.366,65.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE81538,LumA,0.855,0.723,0.783,155.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE81538,LumB,0.497,0.838,0.624,105.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE96058,Basal,0.852,0.498,0.628,209.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE96058,Her2,0.776,0.156,0.26,243.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE96058,LumA,0.826,0.745,0.783,1469.0
+Set 3 (IHQ + Ki67 + Grade),IHQ Surrogate,GSE96058,LumB,0.436,0.71,0.54,676.0
