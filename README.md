@@ -2,7 +2,7 @@
 
 **Routine pathology cannot reliably reproduce 4-class PAM50 intrinsic subtypes in breast cancer: a multicohort in silico study defining the luminal grey zone**
 
-Rafael de Negreiros Botan, João Batista de Sousa
+Rafael de Negreiros Botan, Sandro José Martins, João Batista de Sousa
 Universidade de Brasília, Brazil
 
 ## Overview
