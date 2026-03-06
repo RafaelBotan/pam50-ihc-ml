@@ -67,8 +67,7 @@ SUPP_FIGURES = {
 
 AFFILIATIONS = [
     '\u00b9 Department of Oncology, Universidade de Bras\u00edlia, Bras\u00edlia, Brazil',
-    '\u00b2 Oncology Unit, Hospital Universit\u00e1rio de Bras\u00edlia (HUB/EBSERH), Universidade de Bras\u00edlia, Bras\u00edlia, Brazil',
-    '\u00b3 Department of Proctology, Universidade de Bras\u00edlia, Bras\u00edlia, Brazil',
+    '\u00b2 Department of Proctology, Universidade de Bras\u00edlia, Bras\u00edlia, Brazil',
 ]
 
 TITLE = (
@@ -210,12 +209,12 @@ def add_authors(doc):
     # Author 2
     r3 = p.add_run(', Sandro Jos\u00e9 Martins ')
     r3.font.name = 'Times New Roman'; r3.font.size = Pt(12)
-    r4 = p.add_run('2')
+    r4 = p.add_run('1')
     r4.font.name = 'Times New Roman'; r4.font.size = Pt(12); r4.font.superscript = True
     # Author 3
     r5 = p.add_run(', Jo\u00e3o Batista de Sousa ')
     r5.font.name = 'Times New Roman'; r5.font.size = Pt(12)
-    r6 = p.add_run('3')
+    r6 = p.add_run('2')
     r6.font.name = 'Times New Roman'; r6.font.size = Pt(12); r6.font.superscript = True
     doc.add_paragraph()
     for aff in AFFILIATIONS:
