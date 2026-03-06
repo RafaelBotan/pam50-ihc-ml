@@ -654,14 +654,17 @@ def build_manuscript(inline=True):
         'publicly available, de-identified datasets and involved no direct patient contact or '
         'new biological material.', indent=False)
 
-    # Funding
-    h1(doc, 'Funding')
+    # Role of funding source
+    h1(doc, 'Role of the funding source')
     para(doc,
         'This research did not receive any specific grant from funding agencies in the '
-        'public, commercial, or not-for-profit sectors.', indent=False)
+        'public, commercial, or not-for-profit sectors. No study sponsor was involved in '
+        'the study design; in the collection, analysis, and interpretation of data; in the '
+        'writing of the manuscript; or in the decision to submit the manuscript for '
+        'publication.', indent=False)
 
     # COI
-    h1(doc, 'Declaration of competing interest')
+    h1(doc, 'Conflict of interest statement')
     para(doc,
         'The authors declare that they have no known competing financial interests or '
         'personal relationships that could have appeared to influence the work reported '
