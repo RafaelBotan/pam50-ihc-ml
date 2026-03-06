@@ -40,7 +40,11 @@ os.makedirs(MS_DIR, exist_ok=True)
 t_flow = pd.read_csv(os.path.join(TAB_DIR, 'table_sample_flow.csv'))
 t_lumab = pd.read_csv(os.path.join(TAB_DIR, 'table_lumAB_crossover.csv'))
 t_gz = pd.read_csv(os.path.join(TAB_DIR, 'table_grey_zone.csv'))
-t_sens = pd.read_csv(os.path.join(TAB_DIR, 'table_sensitivity_enhanced.csv'))
+t_sens_raw = pd.read_csv(os.path.join(TAB_DIR, 'table_sensitivity_enhanced.csv'))
+# Enrich Table 4 with model/feature-set info for clarity
+t_sens = t_sens_raw.copy()
+t_sens.insert(1, 'Model', 'XGBoost')
+t_sens.insert(2, 'Feature Set', 'Set 1 (ER, PR, HER2)')
 
 # ── Figure mapping (correction #9: Fig 6 moved to supplementary) ──
 # Main figures: 1-5 only
@@ -238,10 +242,12 @@ TABLE1_FOOTNOTES = (
 # ── Table 4 footnote (correction #7) ────────────────────────
 
 TABLE4_FOOTNOTES = (
-    'Values in this table refer to the largest evaluable subset for each machine-learning '
-    'analysis and are not directly equivalent to matched head-to-head comparisons with the '
-    'immunohistochemical surrogate. All direct surrogate-versus-model comparisons are reported '
-    'separately using identical denominators (see Section 3.3).'
+    'All values refer to XGBoost Set 1 (ER, PR, HER2) applied to the largest model-evaluable '
+    'subset in each cohort. The 4-class macro-F1 values (0.514 and 0.522) are therefore not '
+    'directly comparable to the matched head-to-head results in Section 3.3, which use '
+    'XGBoost Set 2 (+ grade) on a different denominator (n=1,544 in METABRIC). '
+    'All direct surrogate-versus-model comparisons are reported separately using identical '
+    'denominators.'
 )
 
 
@@ -538,10 +544,16 @@ def build_manuscript(inline=True):
     h2(doc, '3.6 Sensitivity analysis: 3-class collapse')
     para(doc,
         'Collapsing Luminal A and Luminal B into a single luminal class substantially improved '
-        'performance. Macro-F1 increased from 0.514 to 0.777 in TCGA-BRCA and from 0.522 to '
-        '0.767 in METABRIC (Table 4). This result is central to interpretation: most of the '
-        'classification deficit resides within the luminal boundary rather than in the broader '
-        'separation of luminal, HER2-enriched, and Basal-like disease.')
+        'performance. Using the best Set 1 model (XGBoost) on the largest evaluable subsets, '
+        'macro-F1 increased from 0.514 to 0.777 in TCGA-BRCA (n=435) and from 0.522 to '
+        '0.767 in METABRIC (n=1,608) (Table 4). This result is central to interpretation: '
+        'most of the classification deficit resides within the luminal boundary rather than '
+        'in the broader separation of luminal, HER2-enriched, and Basal-like disease.')
+    para(doc,
+        'The 4-class baseline values in Table 4 (0.514 and 0.522) correspond to XGBoost '
+        'Set 1 applied to the full model-evaluable subsets and are therefore not directly '
+        'comparable to the matched head-to-head values reported in Section 3.3 (0.559 for '
+        'XGBoost Set 2, n=1,544), which use a different feature set and a different denominator.')
     # Table 4 with footnote (correction #7)
     tbl(doc, t_sens,
         'Table 4. Sensitivity analysis comparing 4-class and 3-class performance in model-evaluable subsets.',
