@@ -30,6 +30,14 @@ manuscript/*.pdf
 manuscript/*.html
 manuscript/*_p*.png
 manuscript/page_*.png
+manuscript/BCRT_submission_package_*/
+manuscript/*submission_package*.zip
+manuscript/*_DRAFT_REVIEWERS_TO_CONFIRM.*
+manuscript/Reviewer_Suggestions*
+manuscript/Submission_Checklist*
+manuscript/Guideline_Extract*
+manuscript/BCRT_DEEP_AUDIT*
+tmp/
 
 # Download logs
 data/download_log.txt

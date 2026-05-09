@@ -1,0 +1,4 @@
+Feature Set,Model,Cohort,N,Delta macro-F1 (ML - surrogate),Delta 95% CI
+Set 1,Logistic Regression,TCGA-BRCA,162,-0.117,(-0.178 to -0.058)
+Set 1,XGBoost,METABRIC,1554,-0.123,(-0.142 to -0.103)
+Set 2,XGBoost,METABRIC,1544,-0.085,(-0.107 to -0.062)

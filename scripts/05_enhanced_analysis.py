@@ -115,6 +115,26 @@ def bootstrap_metrics(y_true, y_pred, n_boot=1000, seed=42):
     }
 
 
+def bootstrap_f1_difference(y_true, y_ml, y_surr, n_boot=1000, seed=42):
+    """Paired bootstrap CI for macro-F1 difference: ML minus surrogate."""
+    rng = np.random.RandomState(seed)
+    n = len(y_true)
+    diffs = []
+    for _ in range(n_boot):
+        idx = rng.choice(n, n, replace=True)
+        yt = y_true[idx]
+        if len(np.unique(yt)) < 2:
+            continue
+        f_ml = f1_score(yt, y_ml[idx], average='macro', zero_division=0)
+        f_surr = f1_score(yt, y_surr[idx], average='macro', zero_division=0)
+        diffs.append(f_ml - f_surr)
+    return {
+        'diff_mean': np.mean(diffs),
+        'diff_lo': np.percentile(diffs, 2.5),
+        'diff_hi': np.percentile(diffs, 97.5),
+    }
+
+
 def run_full_analysis():
     print("Loading data...")
     df = load_data()
@@ -135,14 +155,18 @@ def run_full_analysis():
         n_set1 = c.dropna(subset=features_set1).shape[0]
         n_set2 = c.dropna(subset=features_set2).shape[0]
         n_surr = c['ihq_as_pam50'].notna().sum()
-        n_both = c.dropna(subset=features_set1)[c.dropna(subset=features_set1)['ihq_as_pam50'].notna()].shape[0]
+        set1_complete = c.dropna(subset=features_set1)
+        set2_complete = c.dropna(subset=features_set2)
+        n_both_set1 = set1_complete[set1_complete['ihq_as_pam50'].notna()].shape[0]
+        n_both_set2 = set2_complete[set2_complete['ihq_as_pam50'].notna()].shape[0]
         flow_rows.append({
             'Cohort': cohort, 'N (4-class PAM50)': n_4class,
-            'N (Set 1 complete)': n_set1, 'N (Set 2 complete)': n_set2,
+            'N (Receptor-only complete)': n_set1, 'N (Receptor-grade complete)': n_set2,
             'N (Surrogate classifiable)': n_surr,
-            'N (Head-to-head Set 1 vs Surrogate)': n_both,
+            'N (H2H Receptor-only vs Surrogate)': n_both_set1,
+            'N (H2H Receptor-grade vs Surrogate)': n_both_set2,
         })
-        print(f"  {cohort}: 4-class={n_4class}, Set1={n_set1}, Set2={n_set2}, Surr={n_surr}, H2H={n_both}")
+        print(f"  {cohort}: 4-class={n_4class}, Set1={n_set1}, Set2={n_set2}, Surr={n_surr}, H2H1={n_both_set1}, H2H2={n_both_set2}")
 
     flow_df = pd.DataFrame(flow_rows)
     flow_df.to_csv(os.path.join(TAB_DIR, 'table_sample_flow.csv'), index=False)
@@ -150,6 +174,7 @@ def run_full_analysis():
     # ========== TRAIN MODELS ==========
     print("\n=== TRAINING ===")
     all_results = []
+    paired_rows = []
 
     for set_name, features in [('Set 1', features_set1), ('Set 2', features_set2), ('Set 3', features_set3)]:
         train_mask = df['cohort'].isin(train_cohorts)
@@ -230,6 +255,12 @@ def run_full_analysis():
                 Xin = X_h2h_s if 'Logistic' in best_ml_name else X_h2h
                 y_ml_h2h = fitted[best_ml_name].predict(Xin)
                 boot_ml = bootstrap_metrics(y_h2h, y_ml_h2h)
+                boot_diff = bootstrap_f1_difference(y_h2h, y_ml_h2h, y_surr)
+                paired_rows.append({
+                    'Feature Set': set_name, 'Model': best_ml_name, 'Cohort': cohort, 'N': len(h2h_data),
+                    'Delta macro-F1 (ML - surrogate)': f"{boot_diff['diff_mean']:.3f}",
+                    'Delta 95% CI': f"({boot_diff['diff_lo']:.3f} to {boot_diff['diff_hi']:.3f})",
+                })
                 all_results.append({
                     'Feature Set': set_name, 'Model': f'{best_ml_name} (H2H)', 'Cohort': cohort, 'N': len(h2h_data),
                     'Macro F1': f"{boot_ml['f1_mean']:.3f}", 'F1 95% CI': f"({boot_ml['f1_lo']:.3f}-{boot_ml['f1_hi']:.3f})",
@@ -239,7 +270,7 @@ def run_full_analysis():
                     '_kappa': boot_ml['kappa_mean'], '_ba': boot_ml['ba_mean'],
                     '_y_true': y_h2h, '_y_pred': y_ml_h2h, '_y_prob': None,
                 })
-                print(f"  {set_name} | H2H {cohort} (N={len(h2h_data)}): Surr F1={boot_s['f1_mean']:.3f}, {best_ml_name} F1={boot_ml['f1_mean']:.3f}")
+                print(f"  {set_name} | H2H {cohort} (N={len(h2h_data)}): Surr F1={boot_s['f1_mean']:.3f}, {best_ml_name} F1={boot_ml['f1_mean']:.3f}, delta={boot_diff['diff_mean']:.3f}")
 
     # ========== LUMINAL A/B DISCORDANCE TABLE ==========
     print("\n=== LUMINAL A/B DISCORDANCE ===")
@@ -289,7 +320,7 @@ def run_full_analysis():
 
     # ========== GREY ZONE / CONFIDENCE SCORE ==========
     print("\n=== GREY ZONE ANALYSIS ===")
-    # Use XGBoost Set 2 on METABRIC
+    # Use XGBoost receptor-grade on METABRIC
     features_gz = features_set2
     train_data_gz = df[df['cohort'].isin(train_cohorts)].dropna(subset=features_gz + ['pam50_label'])
     X_gz = train_data_gz[features_gz].values.astype(float)
@@ -333,7 +364,7 @@ def run_full_analysis():
             # LumA/LumB proportion
             lum_prop = ((val_gz.iloc[np.where(mask)[0]]['pam50_label'].isin(['LumA', 'LumB'])).mean())
             gz_rows.append({
-                'Confidence Zone': label, 'N': n_zone, f'N (%)': f"{n_zone} ({100*n_zone/len(val_gz):.1f}%)",
+                'Confidence Zone': label, 'N': n_zone, '%': f"{100*n_zone/len(val_gz):.1f}%",
                 'ML Accuracy': f"{acc_zone:.3f}", 'Surrogate Accuracy': f"{surr_acc:.3f}" if pd.notna(surr_acc) else 'N/A',
                 'Luminal A+B proportion': f"{lum_prop:.1%}",
             })
@@ -352,9 +383,9 @@ def run_full_analysis():
     train_3c = df_3c[df_3c['cohort'].isin(train_cohorts)].dropna(subset=features_set1 + ['pam50_3c'])
     X3 = train_3c[features_set1].values.astype(float)
     y3 = le3.transform(train_3c['pam50_3c'])
-    xgb3 = xgb.XGBClassifier(n_estimators=300, max_depth=5, learning_rate=0.1,
-                               objective='multi:softprob', num_class=3,
-                               eval_metric='mlogloss', random_state=42, verbosity=0)
+    xgb3 = xgb.XGBClassifier(n_estimators=500, max_depth=6, learning_rate=0.1,
+                             objective='multi:softprob', num_class=3,
+                             eval_metric='mlogloss', random_state=42, verbosity=0)
     xgb3.fit(X3, y3)
 
     sens_rows = []
@@ -370,6 +401,7 @@ def run_full_analysis():
             'Analysis': '3-class (Luminal grouped)', 'Cohort': cohort, 'N': len(vc),
             'Macro F1': f"{boot['f1_mean']:.3f}", 'F1 95% CI': f"({boot['f1_lo']:.3f}-{boot['f1_hi']:.3f})",
             'Kappa': f"{boot['kappa_mean']:.3f}",
+            'Kappa 95% CI': f"({boot['kappa_lo']:.3f}-{boot['kappa_hi']:.3f})",
         })
         print(f"  3-class {cohort}: F1={boot['f1_mean']:.3f} ({boot['f1_lo']:.3f}-{boot['f1_hi']:.3f})")
 
@@ -382,7 +414,7 @@ def run_full_analysis():
         train_4 = df[df['cohort'].isin(train_cohorts)].dropna(subset=features_set1 + ['pam50_label'])
         X4t = train_4[features_set1].values.astype(float)
         y4t = le.transform(train_4['pam50_label'])
-        xgb4 = xgb.XGBClassifier(n_estimators=300, max_depth=5, learning_rate=0.1,
+        xgb4 = xgb.XGBClassifier(n_estimators=500, max_depth=6, learning_rate=0.1,
                                    objective='multi:softprob', num_class=4,
                                    eval_metric='mlogloss', random_state=42, verbosity=0)
         xgb4.fit(X4t, y4t)
@@ -391,9 +423,10 @@ def run_full_analysis():
         yp = xgb4.predict(Xv)
         boot = bootstrap_metrics(yv, yp)
         sens_rows.append({
-            'Analysis': '4-class (primary)', 'Cohort': cohort, 'N': len(vc),
+            'Analysis': '4-class XGBoost receptor-only', 'Cohort': cohort, 'N': len(vc),
             'Macro F1': f"{boot['f1_mean']:.3f}", 'F1 95% CI': f"({boot['f1_lo']:.3f}-{boot['f1_hi']:.3f})",
             'Kappa': f"{boot['kappa_mean']:.3f}",
+            'Kappa 95% CI': f"({boot['kappa_lo']:.3f}-{boot['kappa_hi']:.3f})",
         })
 
     sens_df = pd.DataFrame(sens_rows)
@@ -402,6 +435,7 @@ def run_full_analysis():
     # Save main results
     results_df = pd.DataFrame([{k: v for k, v in r.items() if not k.startswith('_')} for r in all_results])
     results_df.to_csv(os.path.join(TAB_DIR, 'table_main_results.csv'), index=False)
+    pd.DataFrame(paired_rows).to_csv(os.path.join(TAB_DIR, 'table_paired_h2h_differences.csv'), index=False)
 
     return df, all_results, le
 
@@ -488,7 +522,7 @@ def fig1_flow(df):
     arrow(5, 8.1, 7.5, 7.6)
 
     # Analysis
-    box(2.5, 5, 'Feature Sets\nSet 1: ER, PR, HER2\nSet 2: + Grade\nSet 3: + Ki67, Grade', '#FFF3E0', 3.5, 1.5)
+    box(2.5, 5, 'Pathology feature sets\nReceptor-only: ER, PR, HER2\nReceptor-grade: + grade\nFull pathology: + Ki67, grade', '#FFF3E0', 3.5, 1.5)
     box(7.5, 5, 'Models\nLogistic Regression\nRandom Forest\nXGBoost\nvs IHQ Surrogate', '#FFF3E0', 3.5, 1.5)
 
     arrow(2.5, 6.4, 2.5, 5.8)
@@ -664,7 +698,7 @@ def fig4_confusion(df, results, le):
     ax.set_xlabel('Predicted')
     ax.tick_params(axis='both', labelsize=6)
 
-    # B: XGBoost Set 1 on METABRIC
+    # B: XGBoost receptor-only on METABRIC
     met_res = [r for r in results if r['Cohort'] == 'METABRIC' and r['Model'] == 'XGBoost' and r['Feature Set'] == 'Set 1']
     if met_res:
         ax = axes[1]
@@ -674,11 +708,11 @@ def fig4_confusion(df, results, le):
         sns.heatmap(cm2_n, annot=True, fmt='.2f', cmap='Blues', ax=ax, vmin=0, vmax=1, cbar=False,
                     xticklabels=[PAM50_LABELS[s] for s in PAM50_ORDER],
                     yticklabels=[PAM50_LABELS[s] for s in PAM50_ORDER])
-        ax.set_title('B. XGBoost Set 1\n(METABRIC)', fontsize=9, fontweight='bold')
+        ax.set_title('B. XGBoost receptor-only\n(METABRIC)', fontsize=9, fontweight='bold')
         ax.set_xlabel('Predicted')
         ax.tick_params(axis='both', labelsize=6)
 
-    # C: XGBoost Set 2 on METABRIC
+    # C: XGBoost receptor-grade on METABRIC
     met_res2 = [r for r in results if r['Cohort'] == 'METABRIC' and r['Model'] == 'XGBoost' and r['Feature Set'] == 'Set 2']
     if met_res2:
         ax = axes[2]
@@ -688,7 +722,7 @@ def fig4_confusion(df, results, le):
         sns.heatmap(cm3_n, annot=True, fmt='.2f', cmap='Blues', ax=ax, vmin=0, vmax=1, cbar=False,
                     xticklabels=[PAM50_LABELS[s] for s in PAM50_ORDER],
                     yticklabels=[PAM50_LABELS[s] for s in PAM50_ORDER])
-        ax.set_title('C. XGBoost Set 2\n(METABRIC)', fontsize=9, fontweight='bold')
+        ax.set_title('C. XGBoost receptor-grade\n(METABRIC)', fontsize=9, fontweight='bold')
         ax.set_xlabel('Predicted')
         ax.tick_params(axis='both', labelsize=6)
 

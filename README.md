@@ -1,15 +1,19 @@
 # PAM50 vs IHC Surrogate: Information Ceiling Study
 
-**Routine pathology cannot reliably reproduce 4-class PAM50 intrinsic subtypes in breast cancer: a multicohort in silico study defining the luminal grey zone**
+**Routine clinicopathological data cannot reliably reproduce 4-class PAM50 intrinsic subtypes in breast cancer: a multicohort in silico study defining the luminal grey zone**
 
-Rafael de Negreiros Botan, Sandro José Martins, João Batista de Sousa
-Universidade de Brasília, Brazil
+Rafael de Negreiros Botan¹,*, Sandro José Martins³, João Batista de Sousa¹,²
+
+¹ University of Brasília, Brasília, Brazil, Medical Sciences Postgraduate Program, School of Medicine, DF, Brazil  
+² University of Brasília, Brasília, Brazil, Department of Colorectal Surgery, Hospital Universitário de Brasília, Brasília, Brazil  
+³ University of Brasília, Brasília, Brazil, Department of Oncology, Hospital Universitário de Brasília, Brasília, Brazil  
+\* Corresponding author: oncologista@gmail.com
 
 ## Overview
 
 This repository contains all code, processed data, and figures for the study evaluating whether machine-learning models trained on routine immunohistochemistry (IHC) variables can approximate PAM50 intrinsic breast cancer subtypes.
 
-**Key finding:** Routine clinicopathological variables impose an information ceiling that no ML algorithm overcomes. The irreducible uncertainty concentrates at the Luminal A/Luminal B boundary.
+**Key finding:** Routine clinicopathological variables impose an information ceiling for 4-class PAM50 reconstruction. In external matched comparisons, machine-learning models did not outperform the conventional IHC surrogate, and the residual uncertainty concentrated at the Luminal A/Luminal B boundary.
 
 ## Cohorts
 
@@ -30,18 +34,19 @@ This repository contains all code, processed data, and figures for the study eva
 │   ├── 02_parse_and_harmonize.py # Parse and harmonise across cohorts
 │   ├── 03_full_analysis.py       # Main ML analysis + bootstrap CIs
 │   ├── 05_enhanced_analysis.py   # Grey-zone + sensitivity analyses
-│   ├── 07_figures_R.R            # Publication figures (R/ggplot2)
-│   └── 10_thebreast_word.py      # Generate Word manuscript
+│   ├── 07_figures_R.R            # Publication figures (R/ggplot2; retained for provenance)
+│   ├── 11_bcrt_word.py           # Generate BCRT Word manuscript
+│   └── 13_fix_bcrt_figures.py    # Regenerate final BCRT figures when local R rendering is unavailable
 ├── data/
 │   └── processed/                # Harmonised datasets (tracked)
 ├── tables/                       # Result tables (CSV)
-├── figures/                      # Python-generated figures (PNG)
-├── figures_R/                    # R-generated figures (PNG + PDF)
+├── figures/                      # Python-generated analysis figures (PNG)
+├── figures_R/                    # Final publication figures (PNG + PDF)
 ├── manuscript/                   # Word documents for submission
-│   ├── manuscript_TheBreast_FINAL.docx       # With inline figures
-│   ├── manuscript_TheBreast_submission.docx   # Placeholders only
-│   ├── title_page.docx
-│   └── tables.docx
+│   ├── manuscript_BCRT_v1.md
+│   ├── manuscript_BCRT_v1.docx
+│   ├── tables_BCRT.docx
+│   └── Manuscript_BCRT_AllText_Tables_Figures.docx
 └── requirements.txt
 ```
 
@@ -70,17 +75,19 @@ python scripts/03_full_analysis.py
 # 5. Enhanced analyses (grey zone, sensitivity)
 python scripts/05_enhanced_analysis.py
 
-# 6. Generate publication figures (R)
-Rscript scripts/07_figures_R.R
+# 6. Generate final BCRT publication figures
+python scripts/13_fix_bcrt_figures.py
 
 # 7. Generate Word manuscript
-python scripts/10_thebreast_word.py
+python scripts/11_bcrt_word.py
 ```
+
+Administrative submission materials, reviewer suggestions, cover letters, and local package-builder scripts are not included in this public repository.
 
 ## Key results
 
-- **IHC surrogate macro-F1:** 0.646 (95% CI 0.623–0.669) on METABRIC
-- **Best ML model (XGBoost + grade):** 0.559 (0.533–0.584) — inferior
+- **IHC surrogate macro-F1:** 0.644 (95% CI 0.616–0.669) in the METABRIC receptor-grade matched subset
+- **Best ML model (XGBoost + grade):** 0.559 (0.533–0.584), paired delta versus surrogate −0.085
 - **Luminal A→B crossover:** 42.5% of molecular LumB received LumA-like label
 - **Grey zone:** 13.5% of cases with <50% confidence, 73.6% luminal, only 15.9% ML accuracy
 - **3-class collapse:** macro-F1 rises to 0.767, confirming luminal boundary as bottleneck

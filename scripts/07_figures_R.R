@@ -19,7 +19,7 @@ library(grid)
 library(gridExtra)
 
 # Set working directory
-setwd("Y:/IHQ e PAM50")
+setwd("Y:/Doutorado Botan/Estudos/IHQ_e_PAM50_submitted")
 
 # -------------------------
 # 1. GLOBAL STYLE
@@ -58,6 +58,18 @@ pal_model <- c(
   "Logistic regression" = "#7570B3",
   "Random forest" = "#D95F02",
   "XGBoost" = "#E7298A"
+)
+
+feature_set_labels <- c(
+  "Set 1" = "Receptor-only",
+  "Set 2" = "Receptor-grade",
+  "Set 3" = "Full pathology"
+)
+
+pal_feature_set <- c(
+  "Receptor-only" = "#ABD9E9",
+  "Receptor-grade" = "#4575B4",
+  "Full pathology" = "#E7298A"
 )
 
 # -------------------------
@@ -150,6 +162,10 @@ performance_df <- tribble(
   "METABRIC", "XGBoost", "Set 2", "All", 0.559, 0.533, 0.584, 0.402, 0.585,
   "METABRIC", "IHC surrogate", "Set 2", "H2H", 0.644, 0.616, 0.669, 0.467, 0.618,
   "METABRIC", "XGBoost", "Set 2", "H2H", 0.559, 0.533, 0.584, 0.402, 0.585
+) %>%
+  mutate(
+    feature_set = recode(feature_set, !!!feature_set_labels),
+    feature_set = factor(feature_set, levels = unname(feature_set_labels))
 )
 
 # Feature importance (real from XGBoost)
@@ -175,7 +191,11 @@ luminal_crossover <- tribble(
   "METABRIC", "LumB misclassified as LumA", 0.425,
   "METABRIC", "LumA misclassified as LumB", 0.269
 ) %>%
-  mutate(cohort = factor(cohort, levels = c("GSE81538", "GSE96058", "TCGA-BRCA", "METABRIC")))
+  mutate(
+    cohort = factor(cohort, levels = c("GSE81538", "GSE96058", "TCGA-BRCA", "METABRIC")),
+    cohort_label = if_else(as.character(cohort) == "TCGA-BRCA", "TCGA-BRCA*", as.character(cohort)),
+    cohort_label = factor(cohort_label, levels = c("GSE81538", "GSE96058", "TCGA-BRCA*", "METABRIC"))
+  )
 
 # Grey zone data (real)
 grey_zone <- tribble(
@@ -189,9 +209,9 @@ grey_zone <- tribble(
 # 3-class vs 4-class sensitivity (real)
 sensitivity_df <- tribble(
   ~cohort, ~analysis, ~macro_f1, ~f1_lo, ~f1_hi,
-  "TCGA-BRCA", "4-class", 0.514, 0.477, 0.547,
+  "TCGA-BRCA", "4-class XGBoost receptor-only", 0.514, 0.477, 0.547,
   "TCGA-BRCA", "3-class (luminal grouped)", 0.777, 0.720, 0.826,
-  "METABRIC", "4-class", 0.522, 0.501, 0.542,
+  "METABRIC", "4-class XGBoost receptor-only", 0.522, 0.501, 0.542,
   "METABRIC", "3-class (luminal grouped)", 0.767, 0.739, 0.796
 )
 
@@ -300,19 +320,20 @@ save_figure(fig2, "fig2_cohort_characteristics", width = 12, height = 9)
 h2h_data <- performance_df %>%
   filter(comparison == "H2H") %>%
   mutate(
-    label = glue("{model} ({feature_set})"),
+    label = ifelse(str_detect(model, "surrogate"), "IHC surrogate", glue("{model}\n{feature_set}")),
     is_surrogate = str_detect(model, "surrogate"),
-    cohort_set = glue("{cohort} - {feature_set}")
+    cohort_set = glue("{cohort} - {feature_set}"),
+    label_x = pmin(f1_hi + 0.012, 0.735)
   )
 
 fig3 <- ggplot(h2h_data, aes(x = macro_f1, y = fct_rev(label), color = ifelse(is_surrogate, "Surrogate", "ML"))) +
   geom_vline(xintercept = 0.5, linetype = "dashed", color = "grey60", linewidth = 0.3) +
   geom_errorbarh(aes(xmin = f1_lo, xmax = f1_hi), height = 0.25, linewidth = 0.7) +
   geom_point(size = 3.5, shape = 18) +
-  geom_text(aes(label = sprintf("%.3f", macro_f1)), hjust = -0.3, size = 3.2, show.legend = FALSE) +
+  geom_text(aes(x = label_x, label = sprintf("%.3f", macro_f1)), hjust = 0, size = 3.2, show.legend = FALSE) +
   facet_wrap(~ cohort, ncol = 1, scales = "free_y") +
   scale_color_manual(values = c("Surrogate" = "#D73027", "ML" = "#4575B4")) +
-  scale_x_continuous(limits = c(0.25, 0.75), breaks = seq(0.3, 0.7, 0.1)) +
+  scale_x_continuous(limits = c(0.25, 0.77), breaks = seq(0.3, 0.7, 0.1)) +
   labs(
     x = "Macro-F1",
     y = NULL,
@@ -330,7 +351,7 @@ save_figure(fig3, "fig3_forest_h2h", width = 9, height = 7)
 # =============================================================
 # FIGURE 4 - LUMINAL A/B CROSSOVER
 # =============================================================
-fig4 <- ggplot(luminal_crossover, aes(x = cohort, y = rate, fill = direction)) +
+fig4 <- ggplot(luminal_crossover, aes(x = cohort_label, y = rate, fill = direction)) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65, color = "black", linewidth = 0.25) +
   geom_text(aes(label = sprintf("%.1f%%", rate * 100)),
             position = position_dodge(width = 0.75), vjust = -0.3, size = 3.3) +
@@ -415,10 +436,13 @@ fig7 <- ggplot(sensitivity_df, aes(x = cohort, y = macro_f1, fill = analysis)) +
   geom_col(position = position_dodge(width = 0.7), width = 0.6, color = "black", linewidth = 0.25) +
   geom_errorbar(aes(ymin = f1_lo, ymax = f1_hi),
                 position = position_dodge(width = 0.7), width = 0.2, linewidth = 0.4) +
-  geom_text(aes(label = sprintf("%.3f", macro_f1)),
-            position = position_dodge(width = 0.7), vjust = -1.2, size = 3.5) +
+  geom_text(aes(y = f1_hi + 0.015, label = sprintf("%.3f", macro_f1)),
+            position = position_dodge(width = 0.7), vjust = 0, size = 3.5) +
   scale_y_continuous(limits = c(0, 0.95), expand = expansion(mult = c(0, 0.05))) +
-  scale_fill_manual(values = c("4-class" = "#E7298A", "3-class (luminal grouped)" = "#66A61E")) +
+  scale_fill_manual(
+    values = c("4-class XGBoost receptor-only" = "#E7298A", "3-class (luminal grouped)" = "#66A61E"),
+    labels = c("4-class XGBoost receptor-only" = "4-class\nXGBoost receptor-only", "3-class (luminal grouped)" = "3-class\n(luminal grouped)")
+  ) +
   labs(
     x = NULL,
     y = "Macro-F1",
@@ -440,21 +464,22 @@ fig8 <- ggplot(metabric_perf, aes(x = model, y = macro_f1, fill = feature_set)) 
   geom_col(position = position_dodge(width = 0.75), width = 0.65, color = "black", linewidth = 0.2) +
   geom_errorbar(aes(ymin = f1_lo, ymax = f1_hi),
                 position = position_dodge(width = 0.75), width = 0.2, linewidth = 0.4) +
-  geom_text(aes(label = sprintf("%.3f", macro_f1)),
-            position = position_dodge(width = 0.75), vjust = -1.2, size = 3.2) +
-  geom_hline(yintercept = 0.646, linetype = "dashed", color = "#D73027", linewidth = 0.6) +
-  annotate("text", x = 3.3, y = 0.665, label = "IHC surrogate (0.646)", color = "#D73027",
-           size = 3, hjust = 1, fontface = "italic") +
-  scale_y_continuous(limits = c(0, 0.75), expand = expansion(mult = c(0, 0.05))) +
-  scale_fill_manual(values = c("Set 1" = "#ABD9E9", "Set 2" = "#4575B4")) +
+  geom_text(aes(y = f1_hi + 0.015, label = sprintf("%.3f", macro_f1)),
+            position = position_dodge(width = 0.75), vjust = 0, size = 3.1) +
+  geom_hline(yintercept = 0.645, linetype = "dashed", color = "#D73027", linewidth = 0.6) +
+  annotate("label", x = 3.18, y = 0.69, label = "IHC surrogate\n0.644-0.646", color = "#D73027",
+           fill = "white", label.size = 0.2, size = 3, hjust = 0.5, fontface = "italic") +
+  scale_y_continuous(limits = c(0, 0.72), breaks = seq(0, 0.7, 0.1),
+                     expand = expansion(mult = c(0, 0.03))) +
+  scale_fill_manual(values = pal_feature_set) +
   labs(
     x = NULL,
     y = "Macro-F1",
-    fill = "Feature set"
+    fill = "Pathology feature set"
   ) +
   theme(legend.position = "top")
 
-save_figure(fig8, "fig8_feature_set_comparison", width = 8, height = 5.5)
+save_figure(fig8, "fig8_feature_set_comparison", width = 8.5, height = 5.5)
 
 
 # =============================================================
@@ -476,8 +501,8 @@ fig9 <- ggplot(h2h_metrics, aes(x = metric, y = value, fill = label)) +
   scale_y_continuous(limits = c(0, 0.72), expand = expansion(mult = c(0, 0.05))) +
   scale_fill_manual(values = c(
     "IHC surrogate" = "#1B9E77",
-    "XGBoost (Set 1)" = "#ABD9E9",
-    "XGBoost (Set 2)" = "#E7298A"
+    "XGBoost (Receptor-only)" = "#ABD9E9",
+    "XGBoost (Receptor-grade)" = "#E7298A"
   )) +
   labs(
     x = NULL,
@@ -494,8 +519,8 @@ save_figure(fig9, "fig9_multimetric_panel", width = 8.5, height = 5.5)
 # =============================================================
 ceiling_data <- tibble(
   x = c(1, 2, 3, 4, 5),
-  label = c("ER/PR/HER2\n(3 binary)", "+Grade\n(+1 ordinal)", "+Ki-67\n(+1 continuous)",
-            "IHC\nSurrogate", "PAM50\n(50 genes)"),
+  label = c("Receptor-only\nER/PR/HER2", "Receptor-grade\n+ grade", "Full pathology\n+ Ki-67",
+            "IHC\nsurrogate", "PAM50\nreference\nstandard"),
   f1 = c(0.523, 0.559, NA, 0.646, 1.0),
   type = c("ML", "ML", "ML", "Surrogate", "Reference")
 )
@@ -510,7 +535,7 @@ fig10 <- ggplot(ceiling_data %>% filter(!is.na(f1)),
            color = "#4575B4", size = 3.5, fontface = "italic") +
   geom_segment(aes(xend = x, yend = 0), linewidth = 1.5, alpha = 0.6) +
   geom_point(size = 5) +
-  geom_text(aes(label = ifelse(!is.na(f1), sprintf("%.3f", f1), "")),
+  geom_text(aes(label = ifelse(type == "Reference", "reference", sprintf("%.3f", f1))),
             vjust = -1.2, size = 3.8, fontface = "bold", show.legend = FALSE) +
   scale_x_continuous(breaks = ceiling_data$x, labels = ceiling_data$label) +
   scale_y_continuous(limits = c(0, 1.05), breaks = seq(0, 1, 0.2)) +
